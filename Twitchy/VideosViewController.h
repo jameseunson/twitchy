@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VideosViewController : UIViewController
+@interface VideosViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+
+@property (nonatomic, strong) IBOutlet UICollectionView * collectionView;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "TwitchStream.h"
 #import "TwitchAPIClient.h"
+#import "LoadingViewHelper.h"
 
 static NSDateFormatter * _iso8601Formatter = nil;
 
@@ -53,12 +54,16 @@ static NSDateFormatter * _iso8601Formatter = nil;
 
 - (void)presentStreamInViewController:(UIViewController*)controller {
     
+    [LoadingViewHelper addLoadingViewToContainerView:controller.view];
+    
     [[TwitchAPIClient sharedClient] loadAccessTokenForChannel:self.channel withCompletion:^(NSDictionary *result) {
 
         NSURL * streamingURL = [TwitchAPIClient generateStreamingURLForChannel: self.channel withToken:result];
         
         AVPlayerViewController *viewController = [[AVPlayerViewController alloc] initWithNibName:nil bundle:nil];
         viewController.player = [[AVPlayer alloc] initWithURL:streamingURL];
+        
+        [LoadingViewHelper removeLoadingViewToContainerView:controller.view];
         
         [controller presentViewController:viewController animated:YES completion:^{
             [viewController.player play];

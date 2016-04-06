@@ -52,8 +52,8 @@
     [self.view addSubview:_loadingView];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
     [self loadGamesForPage:_currentPage];
 }

@@ -7,16 +7,39 @@
 //
 
 #import "AppDelegate.h"
+#import "SearchResultsViewController.h"
+#import "SearchViewController.h"
 
 @interface AppDelegate ()
+
+@property (nonatomic, strong) SearchResultsViewController* searchResultsViewController;
+@property (nonatomic, strong) SearchViewController * searchViewController;
 
 @end
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main" bundle:[NSBundle mainBundle]];
+    self.searchResultsViewController = [storyboard instantiateViewControllerWithIdentifier:@"SearchResultsViewController"];
+    
+    UISearchController * searchController = [[UISearchController alloc] initWithSearchResultsController:_searchResultsViewController];
+    UISearchContainerViewController * containerController = [[UISearchContainerViewController alloc] initWithSearchController:searchController];
+    
+    UINavigationController * navController = [[UINavigationController alloc] initWithRootViewController:containerController];
+    navController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Search" image:nil tag:0];
+    
+    UITabBarController * tabBarController = (UITabBarController*)self.window.rootViewController;
+    
+    NSMutableArray * controllers = [tabBarController.viewControllers mutableCopy];
+    [controllers addObject:navController];
+    
+    self.searchViewController = [[SearchViewController alloc] init];
+    searchController.searchResultsUpdater = _searchViewController;
+    
+    [tabBarController setViewControllers:controllers];
+    
     return YES;
 }
 

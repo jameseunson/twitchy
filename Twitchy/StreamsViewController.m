@@ -10,6 +10,7 @@
 #import "TwitchAPIClient.h"
 #import "StreamCollectionViewCell.h"
 #import "SectionHeaderReusableView.h"
+#import "GameStreamsLoadingMoreCollectionViewCell.h"
 
 @import AVKit;
 
@@ -63,27 +64,70 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return [_streams count];
+    
+    if(_streamsLoaded) {
+        return [_streams count] + 1;
+        
+    } else {
+        return 0;
+    }
 }
 
 - (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    StreamCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:
-                                       kStreamCellReuseIdentifier forIndexPath:indexPath];
     
-    cell.stream = _streams[indexPath.row];
-    return cell;
+    if(indexPath.row == [_streams count]) {
+        GameStreamsLoadingMoreCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:
+                                                           kGameStreamsViewMoreCellReuseIdentifier forIndexPath:indexPath];
+        [cell.loadingView startAnimating];
+        return cell;
+        
+    } else {
+        StreamCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:
+                                           kStreamCellReuseIdentifier forIndexPath:indexPath];
+        
+        cell.stream = _streams[indexPath.row];
+        return cell;
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row == [_streams count] && [_streams count] > 0) {
+        NSLog(@"Displaying loading cell");
+        
+        if(_streamsLoaded) {
+            _streamsLoaded = NO;
+            self.currentPage++;
+            
+            [self loadStreamsForPage:_currentPage];
+        }
+    }
 }
 
 - (UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     SectionHeaderReusableView * view = (SectionHeaderReusableView*)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kHeaderReuseIdentifier forIndexPath:indexPath];
     
-    view.titleLabel.text = @"All Channels";
+    if(_gameFilter) {
+        view.titleLabel.text = _gameFilter.name;
+        
+    } else {
+        view.titleLabel.text = @"All Channels";
+    }
     
     return view;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(kStreamCollectionViewCellWidth, kStreamCollectionViewCellHeight);
+    if(indexPath.row == [_streams count]) {
+        
+        if(_streamsLoaded) {
+            return CGSizeMake(1800.0f, 60.0f);
+        } else {
+            return CGSizeZero;
+        }
+        
+    } else {
+        return CGSizeMake(kStreamCollectionViewCellWidth, kStreamCollectionViewCellHeight);
+    }
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
@@ -99,7 +143,7 @@
 }
 
 - (NSIndexPath*)indexPathForPreferredFocusedViewInCollectionView:(UICollectionView *)collectionView {
-    return [NSIndexPath indexPathForItem:0 inSection:0];
+    return [NSIndexPath indexPathForItem:(_currentPage * 25) inSection:0];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canFocusItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -134,8 +178,11 @@
         [_loadingView stopAnimating];
         
     } else {
-        [[TwitchAPIClient sharedClient] loadTopStreamsWithGameFilter:_gameFilter withCompletion:^(NSArray *result) {
+        
+        [[TwitchAPIClient sharedClient] loadTopStreamsWithGameFilter:_gameFilter withPageNumber:pageNumber withCompletion:^(NSArray *result) {
             [self.streams addObjectsFromArray:result];
+            _streamsLoaded = YES;
+            
             [self.collectionView reloadData];
             
             [_loadingView stopAnimating];

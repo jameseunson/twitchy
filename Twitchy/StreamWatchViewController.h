@@ -10,4 +10,6 @@
 
 @interface StreamWatchViewController : UIViewController
 
+// TODO: Implement with two-column layout, AVPlayer and Chat sidebar
+
 @end

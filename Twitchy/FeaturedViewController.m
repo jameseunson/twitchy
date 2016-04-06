@@ -33,6 +33,7 @@
 @property (nonatomic, assign) BOOL gamesLoaded;
 @property (nonatomic, assign) BOOL streamsLoaded;
 
+- (void)loadContent;
 - (void)presentAllFeaturedStreams;
 
 @end
@@ -67,43 +68,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [_loadingView startAnimating];
+    self.title = @"Featured";
     
-    [[TwitchAPIClient sharedClient] loadFeaturedStreamsWithCompletion:^(NSArray *result) {
-        
-        [self.allStreams addObjectsFromArray:result];
-        
-        if(result && [result count] >= 6) {
-            result = [result subarrayWithRange:NSMakeRange(0, 6)];
-        }
-        
-        [self.streams addObjectsFromArray:result];
-        _streamsLoaded = YES;
-        
-        [self.collectionView reloadData];
-        
-        if([_loadingView isAnimating]) {
-            [_loadingView stopAnimating];
-        }
-    }];
-    
-    [[TwitchAPIClient sharedClient] loadTopGamesWithCompletion:^(NSArray *result) {
-        
-        if(result && [result count] >= 10) {
-            result = [result subarrayWithRange:NSMakeRange(0, 10)];
-        }
-        
-        [self.games addObjectsFromArray:result];
-        _gamesLoaded = YES;
-        
-        [self.collectionView reloadData];
-        
-        if([_loadingView isAnimating]) {
-            [_loadingView stopAnimating];
-        }
-    }];
+    [self loadContent];    
 }
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if(section == 0) {
@@ -291,6 +259,49 @@
 }
 
 #pragma mark - Private Methods
+- (void)loadContent {
+    
+    [self.allStreams removeAllObjects];
+    [self.streams removeAllObjects];
+    [self.games removeAllObjects];
+    
+    [_loadingView startAnimating];
+    
+    [[TwitchAPIClient sharedClient] loadFeaturedStreamsWithCompletion:^(NSArray *result) {
+        
+        [self.allStreams addObjectsFromArray:result];
+        
+        if(result && [result count] >= 6) {
+            result = [result subarrayWithRange:NSMakeRange(0, 6)];
+        }
+        
+        [self.streams addObjectsFromArray:result];
+        _streamsLoaded = YES;
+        
+        [self.collectionView reloadData];
+        
+        if([_loadingView isAnimating]) {
+            [_loadingView stopAnimating];
+        }
+    }];
+    
+    [[TwitchAPIClient sharedClient] loadTopGamesWithCompletion:^(NSArray *result) {
+        
+        if(result && [result count] >= 10) {
+            result = [result subarrayWithRange:NSMakeRange(0, 10)];
+        }
+        
+        [self.games addObjectsFromArray:result];
+        _gamesLoaded = YES;
+        
+        [self.collectionView reloadData];
+        
+        if([_loadingView isAnimating]) {
+            [_loadingView stopAnimating];
+        }
+    }];
+}
+
 - (void)presentAllFeaturedStreams {
     
     // Extract TwitchStream objects from their TwitchFeaturedStreamListing encapsulated class
