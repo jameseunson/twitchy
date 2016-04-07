@@ -7,8 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SearchViewController.h"
 
-@interface SearchResultsViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@protocol SearchViewControllerResultsDelegate;
+@interface SearchResultsViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource,
+    UICollectionViewDelegateFlowLayout, SearchViewControllerResultsDelegate>
+
+@property (nonatomic, strong) NSMutableArray * games;
+@property (nonatomic, strong) NSMutableArray * streams;
+
+@property (nonatomic, assign, getter=isLoading) BOOL loading;
 
 @property (nonatomic, strong) IBOutlet UICollectionView * collectionView;
 

@@ -8,18 +8,42 @@
 
 #import "GameCollectionViewCell.h"
 #import "UIImageView+AFNetworking.h"
+#import "TwitchGame.h"
+
+@interface GameCollectionViewCell ()
+
+- (void)updateInterfaceForGame:(TwitchGame*)game;
+
+@end
 
 @implementation GameCollectionViewCell
+
+- (void)prepareForReuse {
+    self.imageView.image = nil;
+    [self setNeedsDisplay];
+}
 
 #pragma mark - Property Override Methods
 - (void)setGameListing:(TwitchGameListing *)gameListing {
     _gameListing = gameListing;
     
-    self.titleLabel.text = gameListing.game.name;
     self.subtitleLabel.text = [NSString stringWithFormat:@"%@ viewers",
                                [gameListing.viewers stringValue]];
+    [self updateInterfaceForGame:gameListing.game];
+}
+
+- (void)setGame:(TwitchGame *)game {
+    _game = game;
     
-    NSURLRequest * request = [NSURLRequest requestWithURL:gameListing.game.box.large];
+    self.subtitleLabel.text = @"";
+    [self updateInterfaceForGame:game];
+}
+
+#pragma mark - Private Methods
+- (void)updateInterfaceForGame:(TwitchGame*)game {
+    self.titleLabel.text = game.name;
+    
+    NSURLRequest * request = [NSURLRequest requestWithURL:game.box.large];
     
     __block GameCollectionViewCell * blockSelf = self;
     [self.imageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
@@ -37,11 +61,6 @@
         }
         
     } failure:nil];
-}
-
-- (void)prepareForReuse {
-    self.imageView.image = nil;
-    [self setNeedsDisplay];
 }
 
 @end

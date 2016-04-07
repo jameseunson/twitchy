@@ -20,4 +20,7 @@
 
 @property (nonatomic, strong) TwitchGameListing * gameListing;
 
+// Search gives us TwitchGame without TwitchGameListing wrapper
+@property (nonatomic, strong) TwitchGame * game;
+
 @end

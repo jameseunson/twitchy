@@ -46,7 +46,6 @@
 
 // Search
 - (void)searchGamesWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion;
-- (void)searchChannelsWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion;
 - (void)searchStreamsWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion;
 
 // Helper methods

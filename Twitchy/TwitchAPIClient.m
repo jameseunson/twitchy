@@ -221,12 +221,49 @@ static TwitchAPIClient * _sharedClient = nil;
 #pragma mark - Search
 - (void)searchGamesWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion {
     
-}
-- (void)searchChannelsWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion {
+    NSDictionary * params = @{ @"query": query, @"type": @"suggest" };
+    NSString * paramsString = AFQueryStringFromParameters(params);
     
+    NSString * urlString = [NSString stringWithFormat:@"search/games?%@", paramsString];
+    
+    [self.clientManager GET:urlString parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSDictionary * responseDict = (NSDictionary *)responseObject;
+        NSLog(@"searchGamesWithQuery: %@", responseDict);
+        
+        if(![responseObject isKindOfClass:[NSDictionary class]]
+           || ![[responseDict allKeys] containsObject:@"games"]) {
+            completion(nil);
+            return;
+        }
+        completion([[self class] _processResponseObject:responseDict[@"games"] class:TwitchGame.class]);
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"searchGamesWithQuery, failure, %@", error);
+    }];
 }
 - (void)searchStreamsWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion {
     
+    NSDictionary * params = @{ @"query": query };
+    NSString * paramsString = AFQueryStringFromParameters(params);
+    
+    NSString * urlString = [NSString stringWithFormat:@"search/streams?%@", paramsString];
+    
+    [self.clientManager GET:urlString parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSDictionary * responseDict = (NSDictionary *)responseObject;
+        NSLog(@"searchStreamsWithQuery: %@", responseDict);
+        
+        if(![responseObject isKindOfClass:[NSDictionary class]]
+           || ![[responseDict allKeys] containsObject:@"streams"]) {
+            completion(nil);
+            return;
+        }
+        completion([[self class] _processResponseObject:responseDict[@"streams"] class:TwitchStream.class]);
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"searchStreamsWithQuery, failure, %@", error);
+    }];
 }
 
 #pragma mark - Property Override Methods
@@ -290,7 +327,7 @@ static TwitchAPIClient * _sharedClient = nil;
     return outputObjects;
 }
 
-- (NSString*)_getCachedAuthorizationTokenForKey:(NSString *)key {
+- (NSDictionary*)_getCachedAuthorizationTokenForKey:(NSString *)key {
     
     if([[_accessTokenLookup allKeys] containsObject:key]) {
         
