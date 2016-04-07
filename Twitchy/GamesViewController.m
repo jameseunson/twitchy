@@ -99,7 +99,6 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row == [_games count] && [_games count] > 0) {
-        NSLog(@"Displaying loading cell");
         
         if(_gamesLoaded) {
             _gamesLoaded = NO;

@@ -98,7 +98,6 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row == [_videos count] && [_videos count] > 0) {
-        NSLog(@"Displaying loading cell");
         
         if(_videosLoaded) {
             _videosLoaded = NO;

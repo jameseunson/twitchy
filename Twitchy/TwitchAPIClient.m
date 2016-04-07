@@ -229,7 +229,6 @@ static TwitchAPIClient * _sharedClient = nil;
     [self.clientManager GET:urlString parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         NSDictionary * responseDict = (NSDictionary *)responseObject;
-        NSLog(@"searchGamesWithQuery: %@", responseDict);
         
         if(![responseObject isKindOfClass:[NSDictionary class]]
            || ![[responseDict allKeys] containsObject:@"games"]) {

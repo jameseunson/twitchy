@@ -74,7 +74,6 @@ static NSTimeInterval kSearchDelay = 1.0;
         }
     }
 
-    NSLog(@"SearchViewController, query = %@", query);
     self.activeQuery = query;
     
     __block NSInteger resultsToLoad = 2;
@@ -83,7 +82,6 @@ static NSTimeInterval kSearchDelay = 1.0;
     };
     
     [[TwitchAPIClient sharedClient] searchGamesWithQuery:query withCompletion:^(NSArray *result) {
-        NSLog(@"searchController, searchGamesWithQuery, result: %@", result);
         
         if(result) {
             if([self.delegate respondsToSelector:@selector(searchViewController:didRetrieveGamesResults:)]) {
@@ -98,7 +96,6 @@ static NSTimeInterval kSearchDelay = 1.0;
         }
     }];
     [[TwitchAPIClient sharedClient] searchStreamsWithQuery:query withCompletion:^(NSArray *result) {
-        NSLog(@"searchController, searchStreamsWithQuery, result: %@", result);
         
         if(result) {
             if([self.delegate respondsToSelector:@selector(searchViewController:didRetrieveStreamsResults:)]) {

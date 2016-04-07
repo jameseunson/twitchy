@@ -1,17 +1,29 @@
 {
   "layers" : [
     {
-      "filename" : "Front.imagestacklayer"
+      "filename" : "layer-4-copy-2.imagestacklayer"
     },
     {
-      "filename" : "Middle.imagestacklayer"
+      "filename" : "layer-3.imagestacklayer"
     },
     {
-      "filename" : "Back.imagestacklayer"
+      "filename" : "twitchy.imagestacklayer"
+    },
+    {
+      "filename" : "layer-1.imagestacklayer"
+    },
+    {
+      "filename" : "layer0.imagestacklayer"
     }
   ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
+  },
+  "properties" : {
+    "canvasSize" : {
+      "width" : 1280,
+      "height" : 768
+    }
   }
 }

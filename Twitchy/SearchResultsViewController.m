@@ -172,7 +172,6 @@
 
 #pragma mark - SearchViewControllerResultsDelegate Methods
 - (void)searchViewControllerShouldClearExistingResults:(SearchViewController*)controller {
-    NSLog(@"searchViewControllerShouldClearExistingResults:");
     
     [self.games removeAllObjects];
     [self.streams removeAllObjects];
@@ -180,24 +179,20 @@
     [self.collectionView reloadData];
 }
 - (void)searchViewController:(SearchViewController*)controller didRetrieveGamesResults:(NSArray*)results {
-    NSLog(@"searchViewController:didRetrieveGamesResults:");
     
     [self.games addObjectsFromArray:results];
     [self.collectionView reloadData];
 }
 - (void)searchViewController:(SearchViewController*)controller didRetrieveStreamsResults:(NSArray*)results {
-    NSLog(@"searchViewController:didRetrieveStreamsResults:");
     
     [self.streams addObjectsFromArray:results];
     [self.collectionView reloadData];
 }
 - (void)searchViewControllerDidBeginLoading:(SearchViewController*)controller {
-    NSLog(@"searchViewControllerDidBeginLoading:");
     
     self.loading = YES;
 }
 - (void)searchViewControllerDidEndLoading:(SearchViewController*)controller {
-    NSLog(@"searchViewControllerDidEndLoading");
     
     self.loading = NO;
 }
