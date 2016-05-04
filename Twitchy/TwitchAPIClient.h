@@ -12,13 +12,15 @@
 #import "TwitchGameListing.h"
 #import "TwitchFeaturedStreamListing.h"
 #import "TwitchVideo.h"
+#import "TwitchUser.h"
+
+#import "TwitchAPIKeys.h"
 
 #define kAPIBaseURL @"https://api.twitch.tv/kraken"
 #define kAPIAccessTokenBaseURL @"https://api.twitch.tv"
 #define kAPIUsherBaseURL @"http://usher.twitch.tv"
 
-#define kAPIClientID @"brt3awieemfagtg57wtmdmvuuc3qwyl"
-#define kAPIClientSecret @"a7ol5d3dqv6w2jpawexhig22ewi1ww"
+#define kAPITwitchyBackendURL @"http://localhost:3000/api"
 
 @interface TwitchAPIClient : NSObject
 
@@ -51,5 +53,12 @@
 // Helper methods
 + (NSURL*)generateStreamingURLForChannel:(TwitchChannel*)channel withToken:(NSDictionary*)token;
 + (NSURL*)generateVideoURLForVideo:(TwitchVideo*)video withToken:(NSDictionary*)token;
+
+// OAuth Authentication
+- (void)getOAuthTokenWithCompletion: (void (^)(NSDictionary * result))completion;
+- (void)checkOAuthAuthenticationStatusWithCode:(NSString*)code completion: (void (^)(NSDictionary * result))completion;
+
+// OAuth Logged in Methods
+- (void)getUserDetails: (void (^)(TwitchUser * result))completion;
 
 @end

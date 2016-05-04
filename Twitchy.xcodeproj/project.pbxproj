@@ -21,6 +21,9 @@
 		9853751E1CB3A6E500365544 /* SectionHeaderReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9853751D1CB3A6E500365544 /* SectionHeaderReusableView.m */; };
 		985375211CB3A8D000365544 /* FeaturedViewMoreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 985375201CB3A8D000365544 /* FeaturedViewMoreCollectionViewCell.m */; };
 		985375281CB3C79D00365544 /* GameStreamsLoadingMoreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 985375271CB3C79D00365544 /* GameStreamsLoadingMoreCollectionViewCell.m */; };
+		9855FF881CD88DCE00274BA1 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9855FF871CD88DCE00274BA1 /* AccountViewController.m */; };
+		9855FF8B1CD9CBC000274BA1 /* AppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 9855FF8A1CD9CBC000274BA1 /* AppConfig.m */; };
+		9855FF8E1CD9D03300274BA1 /* TwitchUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9855FF8D1CD9D03300274BA1 /* TwitchUser.m */; };
 		98809EEA1CB4F263009C14BD /* VideoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 98809EE91CB4F263009C14BD /* VideoCollectionViewCell.m */; };
 		989B1EAD1CAE3DFA00951EF8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B1EAC1CAE3DFA00951EF8 /* main.m */; };
 		989B1EB01CAE3DFA00951EF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B1EAF1CAE3DFA00951EF8 /* AppDelegate.m */; };
@@ -88,6 +91,13 @@
 		985375201CB3A8D000365544 /* FeaturedViewMoreCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeaturedViewMoreCollectionViewCell.m; sourceTree = "<group>"; };
 		985375261CB3C79D00365544 /* GameStreamsLoadingMoreCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameStreamsLoadingMoreCollectionViewCell.h; sourceTree = "<group>"; };
 		985375271CB3C79D00365544 /* GameStreamsLoadingMoreCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameStreamsLoadingMoreCollectionViewCell.m; sourceTree = "<group>"; };
+		9855FF851CD8861D00274BA1 /* TwitchAPIKeys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TwitchAPIKeys.h; sourceTree = "<group>"; };
+		9855FF861CD88DCE00274BA1 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
+		9855FF871CD88DCE00274BA1 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		9855FF891CD9CBC000274BA1 /* AppConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConfig.h; sourceTree = "<group>"; };
+		9855FF8A1CD9CBC000274BA1 /* AppConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConfig.m; sourceTree = "<group>"; };
+		9855FF8C1CD9D03300274BA1 /* TwitchUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitchUser.h; sourceTree = "<group>"; };
+		9855FF8D1CD9D03300274BA1 /* TwitchUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitchUser.m; sourceTree = "<group>"; };
 		98809EE81CB4F263009C14BD /* VideoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCollectionViewCell.h; sourceTree = "<group>"; };
 		98809EE91CB4F263009C14BD /* VideoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCollectionViewCell.m; sourceTree = "<group>"; };
 		989B1EA81CAE3DFA00951EF8 /* Twitchy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Twitchy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,6 +192,8 @@
 				98DF0C161CB4E85900515C12 /* TwitchVideoResolutions.m */,
 				98DF0C181CB4E86100515C12 /* TwitchVideoThumbnail.h */,
 				98DF0C191CB4E86100515C12 /* TwitchVideoThumbnail.m */,
+				9855FF8C1CD9D03300274BA1 /* TwitchUser.h */,
+				9855FF8D1CD9D03300274BA1 /* TwitchUser.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -212,6 +224,8 @@
 				98B295AC1CB519C200D9DD02 /* SearchViewController.m */,
 				98B295AE1CB519C900D9DD02 /* SearchResultsViewController.h */,
 				98B295AF1CB519C900D9DD02 /* SearchResultsViewController.m */,
+				9855FF861CD88DCE00274BA1 /* AccountViewController.h */,
+				9855FF871CD88DCE00274BA1 /* AccountViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -252,6 +266,7 @@
 				989B1EBA1CAE3DFB00951EF8 /* Assets.xcassets */,
 				989B1EBC1CAE3DFB00951EF8 /* Info.plist */,
 				989B1EAB1CAE3DFA00951EF8 /* Supporting Files */,
+				9855FF851CD8861D00274BA1 /* TwitchAPIKeys.h */,
 			);
 			path = Twitchy;
 			sourceTree = "<group>";
@@ -289,6 +304,8 @@
 				989B1EE01CB2175000951EF8 /* TwitchAPIClient.m */,
 				98CC4F081CB50344006022D6 /* LoadingViewHelper.h */,
 				98CC4F091CB50344006022D6 /* LoadingViewHelper.m */,
+				9855FF891CD9CBC000274BA1 /* AppConfig.h */,
+				9855FF8A1CD9CBC000274BA1 /* AppConfig.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -509,6 +526,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9855FF8E1CD9D03300274BA1 /* TwitchUser.m in Sources */,
 				98AEE0861CB4E74700616742 /* TwitchVideo.m in Sources */,
 				985375281CB3C79D00365544 /* GameStreamsLoadingMoreCollectionViewCell.m in Sources */,
 				98AEE0891CB4E79800616742 /* TwitchVideoChannel.m in Sources */,
@@ -532,11 +550,13 @@
 				989B1EB31CAE3DFA00951EF8 /* GamesViewController.m in Sources */,
 				989B1EAD1CAE3DFA00951EF8 /* main.m in Sources */,
 				985374FA1CB2380B00365544 /* TwitchChannel.m in Sources */,
+				9855FF8B1CD9CBC000274BA1 /* AppConfig.m in Sources */,
 				98B295B01CB519C900D9DD02 /* SearchResultsViewController.m in Sources */,
 				98DF0C171CB4E85900515C12 /* TwitchVideoResolutions.m in Sources */,
 				989B1EE11CB2175000951EF8 /* TwitchAPIClient.m in Sources */,
 				985375091CB2727900365544 /* GameCollectionViewCell.m in Sources */,
 				985375031CB241EF00365544 /* StreamCollectionViewCell.m in Sources */,
+				9855FF881CD88DCE00274BA1 /* AccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

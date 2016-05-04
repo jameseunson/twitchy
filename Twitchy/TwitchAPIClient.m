@@ -10,6 +10,8 @@
 #import "AFHTTPSessionManager.h"
 
 #import <Mantle/Mantle.h>
+#import <CommonCrypto/CommonDigest.h>
+#import "AppConfig.h"
 
 static TwitchAPIClient * _sharedClient = nil;
 
@@ -17,19 +19,20 @@ static TwitchAPIClient * _sharedClient = nil;
 
 @property (nonatomic, strong, readonly) AFHTTPSessionManager * clientManager;
 @property (nonatomic, strong, readonly) AFHTTPSessionManager * accessTokenManager;
-@property (nonatomic, strong, readonly) AFHTTPSessionManager * usherManager;
+@property (nonatomic, strong, readonly) AFHTTPSessionManager * backendManager;
 
 @property (nonatomic, strong) NSMutableDictionary * accessTokenLookup;
 
 + (NSArray*)_processResponseObject:(NSArray *)streams class:(Class)class;
 - (NSDictionary*)_getCachedAuthorizationTokenForKey:(NSString*)key;
++ (NSString*)_generateSHA1Hash:(NSString *)string;
 
 @end
 
 @implementation TwitchAPIClient
 @synthesize clientManager = _clientManager;
 @synthesize accessTokenManager = _accessTokenManager;
-@synthesize usherManager = _usherManager;
+@synthesize backendManager = _backendManager;
 
 + (TwitchAPIClient*)sharedClient {
     
@@ -265,6 +268,55 @@ static TwitchAPIClient * _sharedClient = nil;
     }];
 }
 
+#pragma mark - OAuth Authentication
+- (void)getOAuthTokenWithCompletion: (void (^)(NSDictionary * result))completion {
+    
+    [self.backendManager POST:@"code" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        completion(responseObject);
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        completion(nil);
+    }];
+}
+
+- (void)checkOAuthAuthenticationStatusWithCode:(NSString*)code completion: (void (^)(NSDictionary * result))completion {
+    
+    // This is basic security via a HMAC, both the server and client have the Twitch API secret
+    // so we can use that as the private key to generate the HMAC, by hashing the code using SHA-1
+    NSString * codeHash = [NSString stringWithFormat:@"%@%@", code, kAPIClientSecret];
+    codeHash = [[self class] _generateSHA1Hash:codeHash];
+    
+    NSString * urlString = [NSString stringWithFormat:@"code/status/%@/%@", code, codeHash];
+    NSLog(@"urlString: %@", urlString);
+    
+    [self.backendManager GET:urlString parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        completion(responseObject);
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        completion(nil);
+    }];
+}
+
+#pragma mark - OAuth Logged In Methods
+- (void)getUserDetails: (void (^)(TwitchUser * result))completion {
+    
+    if(![[AppConfig sharedConfig] oAuthToken]) {
+        completion(nil); return;
+    }
+    
+    NSDictionary * params = @{ @"oauth_token": [[AppConfig sharedConfig] oAuthToken] };
+    [self.clientManager GET:@"user" parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSArray * objs = [[self class] _processResponseObject:@[ responseObject ] class:TwitchUser.class];
+        TwitchUser * user = [objs firstObject];
+        
+        completion(user);
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        completion(nil);
+    }];
+}
+
 #pragma mark - Property Override Methods
 - (AFHTTPSessionManager*)clientManager {
     
@@ -299,6 +351,18 @@ static TwitchAPIClient * _sharedClient = nil;
                                               sessionConfiguration:
                       [NSURLSessionConfiguration defaultSessionConfiguration]];
     return _accessTokenManager;
+}
+
+- (AFHTTPSessionManager*)backendManager {
+    
+    if(_backendManager) {
+        return _backendManager;
+    }
+    _backendManager = [[AFHTTPSessionManager alloc] initWithBaseURL:
+                           [NSURL URLWithString:kAPITwitchyBackendURL]
+                                                   sessionConfiguration:
+                           [NSURLSessionConfiguration defaultSessionConfiguration]];
+    return _backendManager;
 }
 
 #pragma mark - Private Methods
@@ -358,6 +422,29 @@ static TwitchAPIClient * _sharedClient = nil;
     
     // Fallthrough, no cache found or cache was expired
     return nil;
+}
+
+// https://stackoverflow.com/questions/735714/iphone-and-hmac-sha-1-encoding
+// Ideally there would just be a SHA1Hash() helper function, but alas no
++ (NSString*)_generateSHA1Hash:(NSString *)string {
+    
+    const char *s = [string cStringUsingEncoding:NSASCIIStringEncoding];
+    NSData *keyData = [NSData dataWithBytes:s length:strlen(s)];
+    
+    // This is the destination
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH] = {0};
+    // This one function does an unkeyed SHA1 hash of your hash data
+    CC_SHA1(keyData.bytes, (CC_LONG)keyData.length, digest);
+    
+    // Now convert to NSData structure to make it usable again
+    NSData *out = [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
+    // description converts to hex but puts <> around it and spaces every 4 bytes
+    NSString *hash = out.description;
+    hash = [hash stringByReplacingOccurrencesOfString:@" " withString:@""];
+    hash = [hash stringByReplacingOccurrencesOfString:@"<" withString:@""];
+    hash = [hash stringByReplacingOccurrencesOfString:@">" withString:@""];
+    
+    return hash;
 }
 
 @end

@@ -10,6 +10,10 @@
 #import "TwitchAPIClient.h"
 #import "LoadingViewHelper.h"
 
+#import <GMIRCClient/GMIRCClient-umbrella.h>
+#import "GMIRCClient-Swift.h"
+#import "AppConfig.h"
+
 static NSDateFormatter * _iso8601Formatter = nil;
 
 @interface TwitchStream ()
@@ -53,6 +57,14 @@ static NSDateFormatter * _iso8601Formatter = nil;
 }
 
 - (void)presentStreamInViewController:(UIViewController*)controller {
+    
+//    GMSocket * socket = [[GMSocket alloc] initWithHost:@"irc.chat.twitch.tv" port:6667];
+//    GMIRCClient * client = [[GMIRCClient alloc] initWithSocket:socket];
+//    
+//    NSString * username = [[AppConfig sharedConfig] oAuthUsername];
+//    client register:username user:<#(NSString * _Nonnull)#> realName:<#(NSString * _Nonnull)#> pass:<#(NSString * _Nonnull)#>
+    
+//    [client registerWithPassword:<#(NSString * _Nonnull)#> user:<#(NSString * _Nonnull)#> realName:<#(NSString * _Nonnull)#> pass:<#(NSString * _Nonnull)#>]
     
     [LoadingViewHelper addLoadingViewToContainerView:controller.view];
     

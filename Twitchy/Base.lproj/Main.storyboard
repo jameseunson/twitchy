@@ -574,6 +574,90 @@
             </objects>
             <point key="canvasLocation" x="2246" y="-2051"/>
         </scene>
+        <!--Account-->
+        <scene sceneID="ReQ-lu-h6O">
+            <objects>
+                <viewController id="ryH-l5-hX4" customClass="AccountViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RE3-Wa-RZD"/>
+                        <viewControllerLayoutGuide type="bottom" id="A3O-2N-st3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ydu-5x-mTf">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gVR-nR-Fe7">
+                                <rect key="frame" x="651" y="497" width="620" height="86"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Login to your Twitch.tv Account"/>
+                            </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="1Be-c3-IQA">
+                                <rect key="frame" x="928" y="508" width="64" height="64"/>
+                                <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enter the following code at http://twitchy.jeon.com.au/code to login:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UbO-hM-hDX">
+                                <rect key="frame" x="556" y="389" width="810" height="96"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qdZ-6n-sad">
+                                <rect key="frame" x="447" y="608" width="1028" height="123"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <string key="text">Note: you will be redirected to Twitch.tv to enter your username and password. Login is not performed on the jeon.com.au domain and this domain never sees your credentials.</string>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" white="0.41144085570469796" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ASDF 1234" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VDu-wg-9ro">
+                                <rect key="frame" x="613" y="488" width="736" height="106"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="authentication-done" translatesAutoresizingMaskIntoConstraints="NO" id="BjW-TV-0i4">
+                                <rect key="frame" x="726" y="231" width="468" height="468"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
+                                </accessibility>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Logged in as syonixx" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kEm-NL-Vj1">
+                                <rect key="frame" x="783" y="688" width="355" height="108"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6PU-eQ-5Yf">
+                                <rect key="frame" x="843" y="787" width="235" height="86"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Continue"/>
+                            </button>
+                        </subviews>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Account" id="TPp-Cd-HzS"/>
+                    <connections>
+                        <outlet property="codeAboveDescriptionLabel" destination="UbO-hM-hDX" id="wwp-dV-uYZ"/>
+                        <outlet property="codeBelowDescriptionLabel" destination="qdZ-6n-sad" id="Fpw-Hv-Niu"/>
+                        <outlet property="codeLabel" destination="VDu-wg-9ro" id="En6-Ya-JQ6"/>
+                        <outlet property="loadingView" destination="1Be-c3-IQA" id="aTG-h2-Zhw"/>
+                        <outlet property="loggedInButton" destination="6PU-eQ-5Yf" id="FYq-uq-iOZ"/>
+                        <outlet property="loggedInImageView" destination="BjW-TV-0i4" id="Af3-P9-ot1"/>
+                        <outlet property="loggedInLabel" destination="kEm-NL-Vj1" id="Nx2-y0-6gF"/>
+                        <outlet property="loginButton" destination="gVR-nR-Fe7" id="qC4-Ys-us2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nvJ-Ax-IIj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2275" y="-3345"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
@@ -589,6 +673,7 @@
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="Q2H-rv-Kgc"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="R3F-7E-fGd"/>
                         <segue destination="4CU-22-PPr" kind="relationship" relationship="viewControllers" id="U7E-Mc-SnX"/>
+                        <segue destination="ryH-l5-hX4" kind="relationship" relationship="viewControllers" id="w3o-GU-bhl"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -730,7 +815,10 @@
             <point key="canvasLocation" x="-276" y="1318"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="authentication-done" width="468" height="468"/>
+    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="2vZ-Do-MMD"/>
+        <segue reference="R3F-7E-fGd"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - GMIRCClient (0.1.4)
   - Mantle (2.0.6):
     - Mantle/extobjc (= 2.0.6)
   - Mantle/extobjc (2.0.6)
@@ -21,11 +22,22 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking
+  - GMIRCClient (from `https://github.com/jameseunson/GMIRCClient`)
   - Mantle
   - Reveal-tvOS-SDK
 
+EXTERNAL SOURCES:
+  GMIRCClient:
+    :git: https://github.com/jameseunson/GMIRCClient
+
+CHECKOUT OPTIONS:
+  GMIRCClient:
+    :commit: cce2470fbdfacc12953580decfcfc9bbaf0d8438
+    :git: https://github.com/jameseunson/GMIRCClient
+
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  GMIRCClient: e7224652dc82d8eb381c305be5f751d53aa0a1cb
   Mantle: 299966b00759634931699f69cb6a30b9239b944d
   Reveal-tvOS-SDK: acb8ac785e0b1426b2f275fb67f12b54632540ee
 
