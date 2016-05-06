@@ -16,7 +16,9 @@
 
 @property (nonatomic, strong) UIActivityIndicatorView * loadingView;
 @property (nonatomic, strong) NSMutableArray * videos;
+
 @property (nonatomic, assign) BOOL videosLoaded;
+@property (nonatomic, assign) BOOL pagesRemainingToLoad;
 
 @property (nonatomic, assign) NSInteger currentPage;
 
@@ -36,6 +38,8 @@
         self.videos = [[NSMutableArray alloc] init];
         
         _videosLoaded = NO;
+        _pagesRemainingToLoad = NO;
+        
         _currentPage = 0;
     }
     return self;
@@ -73,7 +77,7 @@
 
 - (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if(indexPath.row == [_videos count]) {
+    if(indexPath.row == [_videos count] && _pagesRemainingToLoad) {
         GameStreamsLoadingMoreCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:
                                                            kGameStreamsViewMoreCellReuseIdentifier forIndexPath:indexPath];
         [cell.loadingView startAnimating];
@@ -97,7 +101,7 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == [_videos count] && [_videos count] > 0) {
+    if(indexPath.row == [_videos count] && [_videos count] > 0 && _pagesRemainingToLoad) {
         
         if(_videosLoaded) {
             _videosLoaded = NO;
@@ -160,9 +164,10 @@
     
     [_loadingView startAnimating];
     
-    [[TwitchAPIClient sharedClient] loadTopVideosWithPageNumber:_currentPage withCompletion:^(NSArray *result) {
+    [[TwitchAPIClient sharedClient] loadTopVideosWithPageNumber:_currentPage withCompletion:^(NSArray *result, BOOL pagesRemaining) {
         [self.videos addObjectsFromArray:result];
         _videosLoaded = YES;
+        _pagesRemainingToLoad = pagesRemaining;
         
         [self.collectionView reloadData];
         

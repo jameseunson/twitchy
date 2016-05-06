@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AccountViewController : UIViewController
+@interface LoginViewController : UIViewController
 
 @property (nonatomic, strong) IBOutlet UIButton * loginButton;
 

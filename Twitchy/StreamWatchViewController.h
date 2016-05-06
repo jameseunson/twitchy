@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TwitchStream.h"
+#import "StreamChatViewController.h"
 
-@interface StreamWatchViewController : UIViewController
+@interface StreamWatchViewController : UISplitViewController
 
-// TODO: Implement with two-column layout, AVPlayer and Chat sidebar
+@property (nonatomic, strong) TwitchStream * stream;
+@property (nonatomic, strong) StreamChatViewController * chatController;
 
 @end

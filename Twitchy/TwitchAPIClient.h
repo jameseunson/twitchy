@@ -27,17 +27,17 @@
 + (TwitchAPIClient*)sharedClient;
 
 // Games
-- (void)loadTopGamesWithPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result))completion;
-- (void)loadTopGamesWithCompletion: (void (^)(NSArray * result))completion;
+- (void)loadTopGamesWithPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion;
+- (void)loadTopGamesWithCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion;
 
 // Videos
-- (void)loadTopVideosWithCompletion: (void (^)(NSArray * result))completion;
-- (void)loadTopVideosWithPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result))completion;
+- (void)loadTopVideosWithCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion;
+- (void)loadTopVideosWithPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion;
 
 // Streams
-- (void)loadTopStreamsWithCompletion: (void (^)(NSArray * result))completion;
-- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withCompletion: (void (^)(NSArray * result))completion;
-- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result))completion;
+- (void)loadTopStreamsWithCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion;
+- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion;
+- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion;
 
 // Featured
 - (void)loadFeaturedStreamsWithCompletion: (void (^)(NSArray * result))completion;
@@ -60,5 +60,6 @@
 
 // OAuth Logged in Methods
 - (void)getUserDetails: (void (^)(TwitchUser * result))completion;
+- (void)getUserFollowedStreamsWithPageNumber:(NSInteger)pageNumber withCompletion:(void (^)(NSArray * result, BOOL pagesRemaining))completion;
 
 @end

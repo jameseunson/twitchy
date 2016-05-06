@@ -7,6 +7,7 @@
 //
 
 #import "StreamWatchViewController.h"
+#import "TwitchAPIClient.h"
 
 @interface StreamWatchViewController ()
 
@@ -16,22 +17,35 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
+    
+    self.chatController = [self.viewControllers firstObject];
+    _chatController.stream = self.stream;
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    NSArray * viewControllers = [self.viewControllers mutableCopy];
+    NSMutableArray * mutableViewControllers = [viewControllers mutableCopy];
+    [mutableViewControllers removeObject:[mutableViewControllers lastObject]];
+    
+    AVPlayerViewController *viewController = [[AVPlayerViewController alloc] initWithNibName:nil bundle:nil];
+    [mutableViewControllers addObject: viewController];
+    
+    self.viewControllers = mutableViewControllers;
+    
+    [[TwitchAPIClient sharedClient] loadAccessTokenForChannel:self.stream.channel withCompletion:^(NSDictionary *result) {
+        
+        NSURL * streamingURL = [TwitchAPIClient generateStreamingURLForChannel: self.stream.channel withToken:result];
+        viewController.player = [[AVPlayer alloc] initWithURL:streamingURL];
+        [viewController.player play];
+        
+//        [LoadingViewHelper removeLoadingViewToContainerView:controller.view];
+        
+//        [controller presentViewController:viewController animated:YES completion:^{
+//            [viewController.player play];
+//        }];
+        
+        
+    }];
+    
+    self.view.backgroundColor = [UIColor blackColor];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

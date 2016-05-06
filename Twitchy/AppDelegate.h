@@ -12,5 +12,12 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+// User is no longer logged in, replace following controller with login controller
+- (void)revertLogin;
+
+// User has transitioned from not logged in -> logged in state, replace login controller
+// with authenticated user controller
+- (void)continueToAuthenticatedController;
+
 @end
 

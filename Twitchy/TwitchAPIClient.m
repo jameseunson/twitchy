@@ -12,6 +12,7 @@
 #import <Mantle/Mantle.h>
 #import <CommonCrypto/CommonDigest.h>
 #import "AppConfig.h"
+#import "AppDelegate.h"
 
 static TwitchAPIClient * _sharedClient = nil;
 
@@ -72,20 +73,20 @@ static TwitchAPIClient * _sharedClient = nil;
     }];
 }
 
-- (void)loadTopGamesWithCompletion: (void (^)(NSArray * result))completion {
+- (void)loadTopGamesWithCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion {
     [self loadTopGamesWithPageNumber:0 withCompletion:completion];
 }
 
-- (void)loadTopStreamsWithCompletion: (void (^)(NSArray * result))completion {
+- (void)loadTopStreamsWithCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion {
     [self loadTopStreamsWithGameFilter:nil withPageNumber:0 withCompletion:completion];
 }
 
-- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withCompletion: (void (^)(NSArray * result))completion {
+- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion {
     [self loadTopStreamsWithGameFilter:game withPageNumber:0 withCompletion:completion];
 }
 
 #pragma mark - Streams
-- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result))completion {
+- (void)loadTopStreamsWithGameFilter:(TwitchGame*)game withPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion {
     NSDictionary * params = nil;
     if(game) {
         params = @{ @"game": game.name };
@@ -98,10 +99,20 @@ static TwitchAPIClient * _sharedClient = nil;
         NSDictionary * responseDict = (NSDictionary *)responseObject;
         if(![responseObject isKindOfClass:[NSDictionary class]]
            || ![[responseDict allKeys] containsObject:@"streams"]) {
-            completion(nil);
+            completion(nil, NO);
             return;
         }
-        completion([[self class] _processResponseObject:responseDict[@"streams"] class:TwitchStream.class]);
+        
+        NSInteger totalStreamsCount = [responseDict[@"_total"] integerValue];
+        float totalPageCount = ceilf( (float)totalStreamsCount / (float)25 );
+        
+        BOOL pagesRemainingToLoad = YES;
+        if((pageNumber + 1) == ((NSInteger)totalPageCount)) {
+            pagesRemainingToLoad = NO;
+        }
+        
+        completion([[self class] _processResponseObject:responseDict[@"streams"] class:TwitchStream.class],
+                   pagesRemainingToLoad);
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"loadTopStreamsWithCompletion, failure, %@", error);
@@ -127,11 +138,11 @@ static TwitchAPIClient * _sharedClient = nil;
 }
 
 #pragma mark - Videos
-- (void)loadTopVideosWithCompletion: (void (^)(NSArray * result))completion {
+- (void)loadTopVideosWithCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion {
     [self loadTopVideosWithPageNumber:0 withCompletion:completion];
 }
 
-- (void)loadTopVideosWithPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result))completion {
+- (void)loadTopVideosWithPageNumber:(NSInteger)pageNumber withCompletion: (void (^)(NSArray * result, BOOL pagesRemaining))completion {
     
     NSString * urlString = [NSString stringWithFormat:@"videos/top?limit=25&offset=%@", @(pageNumber * 25)];
     
@@ -140,10 +151,19 @@ static TwitchAPIClient * _sharedClient = nil;
         NSDictionary * responseDict = (NSDictionary *)responseObject;
         if(![responseObject isKindOfClass:[NSDictionary class]]
            || ![[responseDict allKeys] containsObject:@"videos"]) {
-            completion(nil);
+            completion(nil, NO);
             return;
         }
-        completion([[self class] _processResponseObject:responseDict[@"videos"] class:TwitchVideo.class]);
+        NSInteger totalStreamsCount = [responseDict[@"_total"] integerValue];
+        float totalPageCount = ceilf( (float)totalStreamsCount / (float)25 );
+        
+        BOOL pagesRemainingToLoad = YES;
+        if((pageNumber + 1) == ((NSInteger)totalPageCount)) {
+            pagesRemainingToLoad = NO;
+        }
+        
+        completion([[self class] _processResponseObject:responseDict[@"videos"] class:TwitchVideo.class],
+                   pagesRemainingToLoad);
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"loadTopVideosWithPageNumber, failure, %@", error);
@@ -313,6 +333,47 @@ static TwitchAPIClient * _sharedClient = nil;
         completion(user);
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        completion(nil);
+    }];
+}
+
+- (void)getUserFollowedStreamsWithPageNumber:(NSInteger)pageNumber withCompletion:(void (^)(NSArray * result))completion {
+ 
+    if(![[AppConfig sharedConfig] oAuthToken]) {
+        completion(nil); return;
+    }
+    
+    NSString * urlString = [NSString stringWithFormat:@"streams/followed?limit=25&offset=%@", @(pageNumber * 25)];
+    
+    NSDictionary * params = @{ @"oauth_token": [[AppConfig sharedConfig] oAuthToken] };
+    [self.clientManager GET:urlString parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSDictionary * responseDict = (NSDictionary *)responseObject;
+        
+        if(![responseObject isKindOfClass:[NSDictionary class]]
+           || ![[responseDict allKeys] containsObject:@"streams"]) {
+            completion(nil);
+            return;
+        }
+        
+        NSInteger totalStreamsCount = [responseDict[@"_total"] integerValue];
+        float totalPageCount = ceilf( (float)totalStreamsCount / (float)25 );
+        
+        BOOL pagesRemainingToLoad = YES;
+        if((pageNumber + 1) == ((NSInteger)totalPageCount)) {
+            pagesRemainingToLoad = NO;
+        }
+        NSLog(@"currentPage = %lu, totalPages: %f, pagesRemaining: %d", pageNumber, totalPageCount, pagesRemainingToLoad);
+        
+        completion([[self class] _processResponseObject:responseDict[@"streams"] class:TwitchStream.class]);
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"getUserFollowedStreamsWithCompletion: %@", error);
+        
+        if([[error localizedDescription] containsString:@"401"]) {
+            AppDelegate * delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+            [delegate revertLogin];
+        }
         completion(nil);
     }];
 }

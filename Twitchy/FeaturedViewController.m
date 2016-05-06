@@ -285,7 +285,7 @@
         }
     }];
     
-    [[TwitchAPIClient sharedClient] loadTopGamesWithCompletion:^(NSArray *result) {
+    [[TwitchAPIClient sharedClient] loadTopGamesWithCompletion:^(NSArray *result, BOOL pagesRemaining) {
         
         if(result && [result count] >= 10) {
             result = [result subarrayWithRange:NSMakeRange(0, 10)];

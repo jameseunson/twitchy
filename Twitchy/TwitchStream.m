@@ -58,14 +58,6 @@ static NSDateFormatter * _iso8601Formatter = nil;
 
 - (void)presentStreamInViewController:(UIViewController*)controller {
     
-//    GMSocket * socket = [[GMSocket alloc] initWithHost:@"irc.chat.twitch.tv" port:6667];
-//    GMIRCClient * client = [[GMIRCClient alloc] initWithSocket:socket];
-//    
-//    NSString * username = [[AppConfig sharedConfig] oAuthUsername];
-//    client register:username user:<#(NSString * _Nonnull)#> realName:<#(NSString * _Nonnull)#> pass:<#(NSString * _Nonnull)#>
-    
-//    [client registerWithPassword:<#(NSString * _Nonnull)#> user:<#(NSString * _Nonnull)#> realName:<#(NSString * _Nonnull)#> pass:<#(NSString * _Nonnull)#>]
-    
     [LoadingViewHelper addLoadingViewToContainerView:controller.view];
     
     [[TwitchAPIClient sharedClient] loadAccessTokenForChannel:self.channel withCompletion:^(NSDictionary *result) {

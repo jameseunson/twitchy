@@ -1,46 +1,45 @@
 //
-//  SecondViewController.m
+//  UserViewController.m
 //  Twitchy
 //
-//  Created by James Eunson on 1/04/2016.
+//  Created by James Eunson on 6/05/2016.
 //  Copyright © 2016 JEON. All rights reserved.
 //
 
-#import "StreamsViewController.h"
-#import "TwitchAPIClient.h"
+#import "UserViewController.h"
+#import "AppConfig.h"
 #import "StreamCollectionViewCell.h"
-#import "SectionHeaderReusableView.h"
 #import "GameStreamsLoadingMoreCollectionViewCell.h"
+#import "SectionHeaderReusableView.h"
+#import "TwitchAPIClient.h"
 #import "StreamWatchViewController.h"
 
-@import AVKit;
-
-#define kStreamCellReuseIdentifier @"streamCellReuseIdentifier"
-#define kGameStreamsViewMoreCellReuseIdentifier @"gameStreamsViewMoreCellReuseIdentifier"
+#define kUserStreamCellReuseIdentifier @"streamCellReuseIdentifier"
+#define kUserStreamsViewMoreCellReuseIdentifier @"gameStreamsViewMoreCellReuseIdentifier"
 #define kHeaderReuseIdentifier @"headerReuseIdentifier"
 
-@interface StreamsViewController ()
+@interface UserViewController ()
 
 @property (nonatomic, strong) UIActivityIndicatorView * loadingView;
-@property (nonatomic, strong) NSMutableArray * streams;
-@property (nonatomic, assign) BOOL streamsLoaded;
+@property (nonatomic, strong) NSMutableArray * userStreams;
+@property (nonatomic, assign) BOOL userStreamsLoaded;
 
 @property (nonatomic, assign) BOOL pagesRemainingToLoad;
 
 @property (nonatomic, assign) NSInteger currentPage;
 
-- (void)loadStreamsForPage:(NSInteger)pageNumber;
+- (void)loadUserStreamsForPage:(NSInteger)pageNumber;
 
 @end
 
-@implementation StreamsViewController
+@implementation UserViewController
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if(self) {
-        self.streams = [[NSMutableArray alloc] init];
+        self.userStreams = [[NSMutableArray alloc] init];
         
-        _streamsLoaded = NO;
+        _userStreamsLoaded = NO;
         _pagesRemainingToLoad = NO;
         _currentPage = 0;
     }
@@ -60,7 +59,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self loadStreamsForPage:_currentPage];
+    self.title = [[AppConfig sharedConfig] objectForKey:kOAuthUsername];
+    
+    [self loadUserStreamsForPage:_currentPage];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -78,12 +79,13 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    if(_streamsLoaded) {
+    if(_userStreamsLoaded) {
+        
         // If more pages to load, load additional progress cell that triggers new page load
         if(_pagesRemainingToLoad) {
-            return [_streams count] + 1;
+            return [_userStreams count] + 1;
         } else {
-            return [_streams count];
+            return [_userStreams count];
         }
         
     } else {
@@ -93,51 +95,35 @@
 
 - (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if(indexPath.row == [_streams count] && _pagesRemainingToLoad) {
+    if(indexPath.row == [_userStreams count] && _pagesRemainingToLoad) {
         GameStreamsLoadingMoreCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:
-                                                           kGameStreamsViewMoreCellReuseIdentifier forIndexPath:indexPath];
+                                                           kUserStreamsViewMoreCellReuseIdentifier forIndexPath:indexPath];
         [cell.loadingView startAnimating];
         return cell;
         
     } else {
         StreamCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:
-                                           kStreamCellReuseIdentifier forIndexPath:indexPath];
-        
-        cell.stream = _streams[indexPath.row];
+                                           kUserStreamCellReuseIdentifier forIndexPath:indexPath];
+        cell.stream = _userStreams[indexPath.row];
         return cell;
     }
 }
 
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == [_streams count] && [_streams count] > 0 && _pagesRemainingToLoad) {
-        NSLog(@"Displaying loading cell");
-        
-        if(_streamsLoaded) {
-            _streamsLoaded = NO;
-            self.currentPage++;
-            
-            [self loadStreamsForPage:_currentPage];
-        }
-    }
-}
+#pragma mark - UICollectionViewDelegate Methods
+
 
 - (UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    SectionHeaderReusableView * view = (SectionHeaderReusableView*)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kHeaderReuseIdentifier forIndexPath:indexPath];
-    
-    if(_gameFilter) {
-        view.titleLabel.text = _gameFilter.name;
-        
-    } else {
-        view.titleLabel.text = @"All Channels";
-    }
+    SectionHeaderReusableView * view = (SectionHeaderReusableView*)[collectionView dequeueReusableSupplementaryViewOfKind:
+                                                                    UICollectionElementKindSectionHeader withReuseIdentifier:kHeaderReuseIdentifier forIndexPath:indexPath];
+    view.titleLabel.text = @"Followed Streams";
     
     return view;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.row == [_streams count]) {
+    if(indexPath.row == [_userStreams count]) {
         
-        if(_streamsLoaded) {
+        if(_userStreamsLoaded) {
             return CGSizeMake(1800.0f, 60.0f);
         } else {
             return CGSizeZero;
@@ -148,6 +134,32 @@
     }
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row == [_userStreams count] && [_userStreams count] > 0 && _pagesRemainingToLoad) {
+        NSLog(@"Displaying loading cell");
+        
+        if(_userStreamsLoaded) {
+            _userStreamsLoaded = NO;
+            self.currentPage++;
+            
+            [self loadUserStreamsForPage:_currentPage];
+        }
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+    
+    // This is not a user stream, but the load more button
+    if(indexPath.row == [_userStreams count] && [_userStreams count] > 0 && _pagesRemainingToLoad) {
+        return;
+    }
+    
+    TwitchStream * selectedStream = _userStreams[indexPath.row];
+    [self performSegueWithIdentifier:@"showWatchSplit" sender:selectedStream];
+}
+
+#pragma mark - UICollectionViewDelegateFlowLayout Methods
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
     return UIEdgeInsetsMake(70.0f, 60.0f, 20.0f, 60.0f);
 }
@@ -176,40 +188,23 @@
     return YES;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
-    
-    TwitchStream * selectedStream = self.streams[indexPath.row];
-    [self performSegueWithIdentifier:@"showWatchSplit" sender:selectedStream];
-    
-//    [selectedStream presentStreamInViewController:self];
-}
-
 #pragma mark - Private Methods
-- (void)loadStreamsForPage:(NSInteger)pageNumber {
-    
+- (void)loadUserStreamsForPage:(NSInteger)pageNumber {
+
     [_loadingView startAnimating];
     
-    if(_existingStreams) {
+    [[TwitchAPIClient sharedClient] getUserFollowedStreamsWithPageNumber:_currentPage withCompletion:^(NSArray *result, BOOL pagesRemaining) {
+        NSLog(@"UserViewController, loadUserStreamsForPage: %@, pagesRemaining?: %d",
+              result, pagesRemaining);
         
-        [self.streams addObjectsFromArray:_existingStreams];
+        [self.userStreams addObjectsFromArray:result];
+        _userStreamsLoaded = YES;
+        _pagesRemainingToLoad = pagesRemaining;
+        
         [self.collectionView reloadData];
         
         [_loadingView stopAnimating];
-        
-    } else {
-        
-        [[TwitchAPIClient sharedClient] loadTopStreamsWithGameFilter:_gameFilter withPageNumber:pageNumber withCompletion:^(NSArray *result, BOOL pagesRemaining) {
-            [self.streams addObjectsFromArray:result];
-            
-            _streamsLoaded = YES;
-            _pagesRemainingToLoad = pagesRemaining;
-            
-            [self.collectionView reloadData];
-            
-            [_loadingView stopAnimating];
-        }];
-    }
+    }];
 }
 
 @end

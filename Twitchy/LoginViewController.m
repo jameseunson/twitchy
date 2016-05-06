@@ -6,11 +6,12 @@
 //  Copyright © 2016 JEON. All rights reserved.
 //
 
-#import "AccountViewController.h"
+#import "LoginViewController.h"
 #import "TwitchAPIClient.h"
 #import "AppConfig.h"
+#import "AppDelegate.h"
 
-@interface AccountViewController ()
+@interface LoginViewController ()
 
 - (void)doLogin;
 - (void)displayCode;
@@ -33,7 +34,7 @@
 
 @end
 
-@implementation AccountViewController
+@implementation LoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -89,7 +90,8 @@
 - (void)didTapLoggedInButton:(id)sender {
     NSLog(@"didTapLoggedInButton");
     
-    
+    AppDelegate * delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate continueToAuthenticatedController];
 }
 
 // Request token from server and display code on screen when token is received

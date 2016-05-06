@@ -10,10 +10,22 @@
 #import "SearchResultsViewController.h"
 #import "SearchViewController.h"
 
+#import "LoginViewController.h"
+#import "UserViewController.h"
+
+#import "AppConfig.h"
+
 @interface AppDelegate ()
 
 @property (nonatomic, strong) SearchResultsViewController* searchResultsViewController;
 @property (nonatomic, strong) SearchViewController * searchViewController;
+
+@property (nonatomic, strong) LoginViewController * loginViewController;
+@property (nonatomic, strong) UserViewController * userViewController;
+
+- (void)initializeSearchController;
+- (void)initializeLoginController;
+- (void)initializeUserController;
 
 @end
 
@@ -21,10 +33,24 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    // This is necessary because UISearchContainerViewController must be initialized with
-    // initWithSearchController:, but storyboard restrict us to initWithCoder:
-    // therefore we have to initialize programmatically and abandon storyboards
-    // for initialisation of the search function
+    [self initializeSearchController];
+    
+    // Presence of kOAuthToken == user logged in
+    if([[AppConfig sharedConfig] objectForKey:kOAuthToken]) {
+        [self initializeUserController];
+        
+    } else {
+        [self initializeLoginController];
+    }
+    
+    return YES;
+}
+
+// This is necessary because UISearchContainerViewController must be initialized with
+// initWithSearchController:, but storyboard restrict us to initWithCoder:
+// therefore we have to initialize programmatically and abandon storyboards
+// for initialisation of the search function
+- (void)initializeSearchController {
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main" bundle:[NSBundle mainBundle]];
     self.searchResultsViewController = [storyboard instantiateViewControllerWithIdentifier:@"SearchResultsViewController"];
@@ -46,10 +72,79 @@
     _searchViewController.delegate = _searchResultsViewController;
     
     [tabBarController setViewControllers:controllers];
-    
-    return YES;
 }
 
+- (void)initializeLoginController {
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main" bundle:[NSBundle mainBundle]];
+    self.loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    
+    UITabBarController * tabBarController = (UITabBarController*)self.window.rootViewController;
+    
+    NSMutableArray * controllers = [tabBarController.viewControllers mutableCopy];
+    [controllers insertObject:_loginViewController atIndex:0];
+    
+    [tabBarController setViewControllers:controllers];
+}
+
+- (void)initializeUserController {
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main" bundle:[NSBundle mainBundle]];
+    self.userViewController = [storyboard instantiateViewControllerWithIdentifier:@"UserViewController"];
+    
+    _userViewController.title = [[AppConfig sharedConfig] objectForKey:kOAuthUsername];
+    _userViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:_userViewController.title image:nil tag:0];
+    
+    UITabBarController * tabBarController = (UITabBarController*)self.window.rootViewController;
+    
+    NSMutableArray * controllers = [tabBarController.viewControllers mutableCopy];
+    [controllers insertObject:_userViewController atIndex:0];
+    
+    [tabBarController setViewControllers:controllers];
+}
+
+#pragma mark - Public Methods
+- (void)revertLogin {
+    
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                   message:@"Your Twitch.tv session has expired. Please login again to continue using logged-in features."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:
+                      UIAlertActionStyleCancel handler:nil]];
+    [self.window.rootViewController presentViewController:alert animated:YES completion:^{
+        
+        // If first controller is user logged in controller, remove and replace with
+        // login controller, then select Login controller.
+        UITabBarController * tabBarController = (UITabBarController*)self.window.rootViewController;
+        
+        NSMutableArray * controllers = [tabBarController.viewControllers mutableCopy];
+        if([[controllers firstObject] isKindOfClass:[UserViewController class]]) {
+            [controllers removeObject:[controllers firstObject]];
+        }
+        [tabBarController setViewControllers:controllers];
+        
+        [self initializeLoginController];
+        [tabBarController setSelectedIndex:0];
+    }];
+}
+
+- (void)continueToAuthenticatedController {
+    
+    // If first controller is user logged in controller, remove and replace with
+    // login controller, then select Login controller.
+    UITabBarController * tabBarController = (UITabBarController*)self.window.rootViewController;
+    
+    NSMutableArray * controllers = [tabBarController.viewControllers mutableCopy];
+    if([[controllers firstObject] isKindOfClass:[LoginViewController class]]) {
+        [controllers removeObject:[controllers firstObject]];
+    }
+    [tabBarController setViewControllers:controllers];
+    
+    [self initializeUserController];
+    [tabBarController setSelectedIndex:0];
+}
+
+#pragma mark - UIApplication Lifecycle Methods
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
