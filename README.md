@@ -10,3 +10,5 @@ More information about this project is available at http://jeon.com.au/twitchy
 A video of this project in action is available here: https://vimeo.com/162956789
 
 ![Twitchy for tvOS by James Eunson](https://i.imgur.com/kfggsGD.jpg "Twitchy for tvOS by James Eunson")
+
+![Twitchy for tvOS by James Eunson](https://i.imgur.com/QTHoHcU.jpg "Twitchy for tvOS by James Eunson")
