@@ -64,7 +64,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"showWatchSplit"]) {
+    if([segue.identifier isEqualToString:@"showStreamWatch"]) {
         
         StreamWatchViewController * controller = (StreamWatchViewController*) segue.destinationViewController;
         controller.stream = sender;
@@ -180,7 +180,7 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
     TwitchStream * selectedStream = self.streams[indexPath.row];
-    [self performSegueWithIdentifier:@"showWatchSplit" sender:selectedStream];
+    [self performSegueWithIdentifier:@"showStreamWatch" sender:selectedStream];
     
 //    [selectedStream presentStreamInViewController:self];
 }

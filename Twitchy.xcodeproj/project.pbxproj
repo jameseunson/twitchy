@@ -28,6 +28,7 @@
 		9855FF941CDC6BC700274BA1 /* StreamChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9855FF931CDC6BC700274BA1 /* StreamChatViewController.m */; };
 		9855FF971CDC818D00274BA1 /* StreamChatTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9855FF961CDC818D00274BA1 /* StreamChatTableViewCell.m */; };
 		9855FF9A1CDC86FE00274BA1 /* LabelHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9855FF991CDC86FE00274BA1 /* LabelHelper.m */; };
+		9855FF9D1CDD7E0C00274BA1 /* TwitchIRCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9855FF9C1CDD7E0C00274BA1 /* TwitchIRCClient.m */; };
 		98809EEA1CB4F263009C14BD /* VideoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 98809EE91CB4F263009C14BD /* VideoCollectionViewCell.m */; };
 		989B1EAD1CAE3DFA00951EF8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B1EAC1CAE3DFA00951EF8 /* main.m */; };
 		989B1EB01CAE3DFA00951EF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 989B1EAF1CAE3DFA00951EF8 /* AppDelegate.m */; };
@@ -110,6 +111,8 @@
 		9855FF961CDC818D00274BA1 /* StreamChatTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreamChatTableViewCell.m; sourceTree = "<group>"; };
 		9855FF981CDC86FE00274BA1 /* LabelHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelHelper.h; sourceTree = "<group>"; };
 		9855FF991CDC86FE00274BA1 /* LabelHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelHelper.m; sourceTree = "<group>"; };
+		9855FF9B1CDD7E0C00274BA1 /* TwitchIRCClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitchIRCClient.h; sourceTree = "<group>"; };
+		9855FF9C1CDD7E0C00274BA1 /* TwitchIRCClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitchIRCClient.m; sourceTree = "<group>"; };
 		98809EE81CB4F263009C14BD /* VideoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCollectionViewCell.h; sourceTree = "<group>"; };
 		98809EE91CB4F263009C14BD /* VideoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCollectionViewCell.m; sourceTree = "<group>"; };
 		989B1EA81CAE3DFA00951EF8 /* Twitchy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Twitchy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -324,6 +327,8 @@
 				98CC4F091CB50344006022D6 /* LoadingViewHelper.m */,
 				9855FF891CD9CBC000274BA1 /* AppConfig.h */,
 				9855FF8A1CD9CBC000274BA1 /* AppConfig.m */,
+				9855FF9B1CDD7E0C00274BA1 /* TwitchIRCClient.h */,
+				9855FF9C1CDD7E0C00274BA1 /* TwitchIRCClient.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -566,6 +571,7 @@
 				985375121CB273F100365544 /* TwitchGameListing.m in Sources */,
 				985375211CB3A8D000365544 /* FeaturedViewMoreCollectionViewCell.m in Sources */,
 				985375061CB2473D00365544 /* StreamWatchViewController.m in Sources */,
+				9855FF9D1CDD7E0C00274BA1 /* TwitchIRCClient.m in Sources */,
 				985374FD1CB2381300365544 /* TwitchGame.m in Sources */,
 				98CC4F0A1CB50344006022D6 /* LoadingViewHelper.m in Sources */,
 				985374F71CB2380300365544 /* TwitchStream.m in Sources */,

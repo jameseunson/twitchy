@@ -10,9 +10,13 @@
 #import "TwitchStream.h"
 #import "StreamChatViewController.h"
 
-@interface StreamWatchViewController : UISplitViewController
+@import AVKit;
+
+@interface StreamWatchViewController : UIViewController
 
 @property (nonatomic, strong) TwitchStream * stream;
+
 @property (nonatomic, strong) StreamChatViewController * chatController;
+@property (nonatomic, strong) AVPlayerViewController * playbackController;
 
 @end

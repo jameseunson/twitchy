@@ -9,13 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TwitchStream.h"
 
-#import <GMIRCClient/GMIRCClient-umbrella.h>
-#import "GMIRCClient-Swift.h"
-
-@interface StreamChatViewController : UITableViewController <GMIRCClientDelegate>
-
-@property (nonatomic, strong) GMSocket * socket;
-@property (nonatomic, strong) GMIRCClient * client;
+@interface StreamChatViewController : UITableViewController
 
 @property (nonatomic, strong) TwitchStream * stream;
 

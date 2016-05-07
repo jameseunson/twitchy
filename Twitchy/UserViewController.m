@@ -65,7 +65,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"showWatchSplit"]) {
+    if([segue.identifier isEqualToString:@"showStreamWatch"]) {
         
         StreamWatchViewController * controller = (StreamWatchViewController*) segue.destinationViewController;
         controller.stream = sender;
@@ -156,7 +156,7 @@
     }
     
     TwitchStream * selectedStream = _userStreams[indexPath.row];
-    [self performSegueWithIdentifier:@"showWatchSplit" sender:selectedStream];
+    [self performSegueWithIdentifier:@"showStreamWatch" sender:selectedStream];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
@@ -193,7 +193,7 @@
 
     [_loadingView startAnimating];
     
-    [[TwitchAPIClient sharedClient] getUserFollowedStreamsWithPageNumber:_currentPage withCompletion:^(NSArray *result, BOOL pagesRemaining) {
+    [[TwitchAPIClient sharedClient] loadUserFollowedStreamsWithPageNumber:_currentPage withCompletion:^(NSArray *result, BOOL pagesRemaining) {
         NSLog(@"UserViewController, loadUserStreamsForPage: %@, pagesRemaining?: %d",
               result, pagesRemaining);
         

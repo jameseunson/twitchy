@@ -14,6 +14,8 @@
 #import "AppConfig.h"
 #import "AppDelegate.h"
 
+#define kEmoticonsFilename @"emoticons.json"
+
 static TwitchAPIClient * _sharedClient = nil;
 
 @interface TwitchAPIClient ()
@@ -21,6 +23,7 @@ static TwitchAPIClient * _sharedClient = nil;
 @property (nonatomic, strong, readonly) AFHTTPSessionManager * clientManager;
 @property (nonatomic, strong, readonly) AFHTTPSessionManager * accessTokenManager;
 @property (nonatomic, strong, readonly) AFHTTPSessionManager * backendManager;
+@property (nonatomic, strong, readonly) AFHTTPSessionManager * emoticonsManager;
 
 @property (nonatomic, strong) NSMutableDictionary * accessTokenLookup;
 
@@ -34,6 +37,7 @@ static TwitchAPIClient * _sharedClient = nil;
 @synthesize clientManager = _clientManager;
 @synthesize accessTokenManager = _accessTokenManager;
 @synthesize backendManager = _backendManager;
+@synthesize emoticonsManager = _emoticonsManager;
 
 + (TwitchAPIClient*)sharedClient {
     
@@ -288,6 +292,65 @@ static TwitchAPIClient * _sharedClient = nil;
     }];
 }
 
+#pragma mark - Chat Emoticons
+- (void)loadChatEmoticonsWithCompletion:(void (^)(NSString * result))completion {
+    
+    if([[AppConfig sharedConfig] streamChatEmoticonsDownloadStarted] &&
+       ![[AppConfig sharedConfig] streamChatEmoticonsDownloadFinished]) {
+        NSLog(@"ERROR: loadChatEmoticonsWithCompletion called while download is in progress");
+        completion(nil);
+    }
+    
+    NSFileManager * fm = [NSFileManager defaultManager];
+    NSString * documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString * filePath = [NSString stringWithFormat:@"%@/%@", documentsPath, kEmoticonsFilename];
+    
+    if([[AppConfig sharedConfig] streamChatEmoticonsDownloadFinished]) {
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            NSError * error = nil;
+            NSString * responseString = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+            if(error) {
+                NSLog(@"loadChatEmoticonsWithCompletion: %@", error);
+            }
+            
+            completion(responseString);
+        });
+        
+    } else {
+        
+        [[AppConfig sharedConfig] setBool:YES forKey:kStreamChatEmoticonsDownloadStarted];
+        
+        [self.emoticonsManager GET:@"chat/emoticons" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"loadChatEmoticonsWithCompletion: %@", responseObject);
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                
+                if(![fm isWritableFileAtPath:documentsPath]) {
+                    NSLog(@"ERROR: Storage directory not writable");
+                    return;
+                }
+                NSData * responseData = (NSData*)responseObject;
+                
+                [fm createFileAtPath:filePath contents:responseData attributes:nil];
+                
+                NSLog(@"loadChatEmoticonsWithCompletion, file written");
+                [[AppConfig sharedConfig] setBool:YES forKey:kStreamChatEmoticonsDownloadFinished];
+                [[NSNotificationCenter defaultCenter] postNotificationName:
+                    kTwitchAPIClientEmoticonsFinishedLoadingNotification object:nil];
+                
+                NSString * responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+                completion(responseString);
+            });
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"loadChatEmoticonsWithCompletion, failure, %@", error);
+            [[AppConfig sharedConfig] setBool:NO forKey:kStreamChatEmoticonsDownloadStarted];
+            completion(nil);
+        }];
+    }
+}
+
 #pragma mark - OAuth Authentication
 - (void)getOAuthTokenWithCompletion: (void (^)(NSDictionary * result))completion {
     
@@ -318,7 +381,7 @@ static TwitchAPIClient * _sharedClient = nil;
 }
 
 #pragma mark - OAuth Logged In Methods
-- (void)getUserDetails: (void (^)(TwitchUser * result))completion {
+- (void)loadUserDetails: (void (^)(TwitchUser * result))completion {
     
     if(![[AppConfig sharedConfig] oAuthToken]) {
         completion(nil); return;
@@ -337,10 +400,10 @@ static TwitchAPIClient * _sharedClient = nil;
     }];
 }
 
-- (void)getUserFollowedStreamsWithPageNumber:(NSInteger)pageNumber withCompletion:(void (^)(NSArray * result))completion {
+- (void)loadUserFollowedStreamsWithPageNumber:(NSInteger)pageNumber withCompletion:(void (^)(NSArray * result, BOOL pagesRemaining))completion {
  
     if(![[AppConfig sharedConfig] oAuthToken]) {
-        completion(nil); return;
+        completion(nil, NO); return;
     }
     
     NSString * urlString = [NSString stringWithFormat:@"streams/followed?limit=25&offset=%@", @(pageNumber * 25)];
@@ -352,7 +415,7 @@ static TwitchAPIClient * _sharedClient = nil;
         
         if(![responseObject isKindOfClass:[NSDictionary class]]
            || ![[responseDict allKeys] containsObject:@"streams"]) {
-            completion(nil);
+            completion(nil, NO);
             return;
         }
         
@@ -365,16 +428,16 @@ static TwitchAPIClient * _sharedClient = nil;
         }
         NSLog(@"currentPage = %lu, totalPages: %f, pagesRemaining: %d", pageNumber, totalPageCount, pagesRemainingToLoad);
         
-        completion([[self class] _processResponseObject:responseDict[@"streams"] class:TwitchStream.class]);
+        completion([[self class] _processResponseObject:responseDict[@"streams"] class:TwitchStream.class], pagesRemainingToLoad);
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"getUserFollowedStreamsWithCompletion: %@", error);
+        NSLog(@"loadUserFollowedStreamsWithCompletion: %@", error);
         
         if([[error localizedDescription] containsString:@"401"]) {
             AppDelegate * delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
             [delegate revertLogin];
         }
-        completion(nil);
+        completion(nil, NO);
     }];
 }
 
@@ -425,6 +488,22 @@ static TwitchAPIClient * _sharedClient = nil;
                            [NSURLSessionConfiguration defaultSessionConfiguration]];
     return _backendManager;
 }
+- (AFHTTPSessionManager*)emoticonsManager {
+    
+    if(_emoticonsManager) {
+        return _emoticonsManager;
+    }
+    _emoticonsManager = [[AFHTTPSessionManager alloc] initWithBaseURL:
+                       [NSURL URLWithString:kAPIBaseURL]
+                                               sessionConfiguration:
+                       [NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    _emoticonsManager.requestSerializer = [AFHTTPRequestSerializer serializer];
+    _emoticonsManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    return _emoticonsManager;
+}
+
 
 #pragma mark - Private Methods
 + (NSArray*)_processResponseObject:(NSArray *)inputItems class:(Class)class {

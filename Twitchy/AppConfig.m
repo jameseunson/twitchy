@@ -8,6 +8,12 @@
 
 #import "AppConfig.h"
 
+#define kConfigDefaultsDict @{ \
+    kStreamChatEmoticonsDownloadStarted: @(NO),\
+    kStreamChatEmoticonsDownloadFinished: @(NO),\
+}\
+
+
 @implementation AppConfig
 
 + (AppConfig *)sharedConfig
@@ -29,9 +35,19 @@
     return self;
 }
 
+- (void)setDefaults {
+    _configDict[kStreamChatEmoticonsDownloadStarted] = kConfigDefaultsDict[kStreamChatEmoticonsDownloadStarted];
+    _configDict[kStreamChatEmoticonsDownloadFinished] = kConfigDefaultsDict[kStreamChatEmoticonsDownloadFinished];
+}
+
 - (void)setUpConfig {
 
-    _configDict = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:kConfigStoreName]];
+    _configDict = [[NSMutableDictionary alloc] initWithDictionary:
+                   [[NSUserDefaults standardUserDefaults] dictionaryForKey:kConfigStoreName]];
+    
+    if([[_configDict allKeys] count] == 0) {
+        [self setDefaults];
+    }
     [self saveConfig];
 }
 
@@ -54,7 +70,14 @@
     _configDict[key] = object;
     [self saveConfig];
 }
+- (void)setBool:(BOOL)value forKey:(NSString *)key {
+    _configDict[key] = @(value);
+    [self saveConfig];
+}
 
+- (BOOL)boolForKey:(NSString*)key {
+    return [_configDict[key] boolValue];
+}
 - (id)objectForKey:(NSString*)key {
     return _configDict[key];
 }
@@ -65,6 +88,20 @@
 
 - (NSString*)oAuthToken {
     return [self objectForKey:kOAuthToken];
+}
+
+- (BOOL)streamChatEmoticonsDownloadStarted {
+    if(![[_configDict allKeys] containsObject:kStreamChatEmoticonsDownloadStarted]) {
+        _configDict[kStreamChatEmoticonsDownloadStarted] = kConfigDefaultsDict[kStreamChatEmoticonsDownloadStarted];
+    }
+    return [_configDict[kStreamChatEmoticonsDownloadStarted] boolValue];
+}
+
+- (BOOL)streamChatEmoticonsDownloadFinished {
+    if(![[_configDict allKeys] containsObject:kStreamChatEmoticonsDownloadFinished]) {
+        _configDict[kStreamChatEmoticonsDownloadFinished] = kConfigDefaultsDict[kStreamChatEmoticonsDownloadFinished];
+    }
+    return [_configDict[kStreamChatEmoticonsDownloadFinished] boolValue];
 }
 
 @end

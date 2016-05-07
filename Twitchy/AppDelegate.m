@@ -33,6 +33,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSLog(@"documents: %@", documentsPaths.firstObject);
+    
     [self initializeSearchController];
     
     // Presence of kOAuthToken == user logged in

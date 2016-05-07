@@ -22,6 +22,8 @@
 
 #define kAPITwitchyBackendURL @"http://localhost:3000/api"
 
+#define kTwitchAPIClientEmoticonsFinishedLoadingNotification @"kTwitchAPIClientEmoticonsFinishedLoadingNotification"
+
 @interface TwitchAPIClient : NSObject
 
 + (TwitchAPIClient*)sharedClient;
@@ -50,16 +52,19 @@
 - (void)searchGamesWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion;
 - (void)searchStreamsWithQuery:(NSString*)query withCompletion:(void (^)(NSArray * result))completion;
 
-// Helper methods
-+ (NSURL*)generateStreamingURLForChannel:(TwitchChannel*)channel withToken:(NSDictionary*)token;
-+ (NSURL*)generateVideoURLForVideo:(TwitchVideo*)video withToken:(NSDictionary*)token;
+// Chat Emoticons
+- (void)loadChatEmoticonsWithCompletion:(void (^)(NSString * result))completion;
 
 // OAuth Authentication
 - (void)getOAuthTokenWithCompletion: (void (^)(NSDictionary * result))completion;
 - (void)checkOAuthAuthenticationStatusWithCode:(NSString*)code completion: (void (^)(NSDictionary * result))completion;
 
 // OAuth Logged in Methods
-- (void)getUserDetails: (void (^)(TwitchUser * result))completion;
-- (void)getUserFollowedStreamsWithPageNumber:(NSInteger)pageNumber withCompletion:(void (^)(NSArray * result, BOOL pagesRemaining))completion;
+- (void)loadUserDetails: (void (^)(TwitchUser * result))completion;
+- (void)loadUserFollowedStreamsWithPageNumber:(NSInteger)pageNumber withCompletion:(void (^)(NSArray * result, BOOL pagesRemaining))completion;
+
+// Helper methods
++ (NSURL*)generateStreamingURLForChannel:(TwitchChannel*)channel withToken:(NSDictionary*)token;
++ (NSURL*)generateVideoURLForVideo:(TwitchVideo*)video withToken:(NSDictionary*)token;
 
 @end

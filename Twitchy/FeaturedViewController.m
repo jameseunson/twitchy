@@ -15,6 +15,7 @@
 #import "SectionHeaderReusableView.h"
 #import "FeaturedViewMoreCollectionViewCell.h"
 #import "StreamsViewController.h"
+#import "StreamWatchViewController.h"
 
 #define kStreamCollectionViewCellReuseIdentifier @"streamCellReuseIdentifier"
 #define kGameCollectionViewCellReuseIdentifier @"gameCellReuseIdentifier"
@@ -70,7 +71,7 @@
     
     self.title = @"Featured";
     
-    [self loadContent];    
+    [self loadContent];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -147,7 +148,7 @@
             
             TwitchFeaturedStreamListing * listing = _streams[indexPath.row];
             TwitchStream * stream = listing.stream;
-            [stream presentStreamInViewController:self];
+            [self performSegueWithIdentifier:@"showStreamWatch" sender:stream];
         }
         
     } else {
@@ -255,6 +256,11 @@
         
         StreamsViewController * controller = [segue destinationViewController];
         controller.existingStreams = streams;
+        
+    } else if([segue.identifier isEqualToString:@"showStreamWatch"]) {
+        
+        StreamWatchViewController * controller = (StreamWatchViewController*) segue.destinationViewController;
+        controller.stream = sender;
     }
 }
 

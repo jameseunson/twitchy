@@ -269,7 +269,7 @@
                     <tabBarItem key="tabBarItem" title="Channels" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="collectionView" destination="Yc4-yl-Fgq" id="jD5-fQ-27O"/>
-                        <segue destination="WEw-lq-zhX" kind="presentation" identifier="showWatchSplit" id="no7-bf-mmM"/>
+                        <segue destination="Bf6-qa-GoC" kind="presentation" identifier="showStreamWatch" id="Lee-di-1uQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
@@ -569,6 +569,7 @@
                     <connections>
                         <outlet property="collectionView" destination="S0m-OW-ufk" id="5ON-2b-Snu"/>
                         <segue destination="8rJ-Kc-sve" kind="show" identifier="showAllFeaturedStreams" id="Ral-WH-XWJ"/>
+                        <segue destination="Bf6-qa-GoC" kind="presentation" identifier="showStreamWatch" id="9JJ-jh-dbz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hCH-rN-EzB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -699,7 +700,7 @@
                     <tabBarItem key="tabBarItem" title="User" id="hMm-4Y-F0a"/>
                     <connections>
                         <outlet property="collectionView" destination="Wwx-Us-yqg" id="gqG-pc-Je8"/>
-                        <segue destination="WEw-lq-zhX" kind="presentation" identifier="showWatchSplit" id="abw-se-l6y"/>
+                        <segue destination="Bf6-qa-GoC" kind="presentation" identifier="showStreamWatch" id="GOx-Kt-QwW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K36-yI-2hE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -790,63 +791,49 @@
             </objects>
             <point key="canvasLocation" x="2275" y="-3345"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="V0Q-Ub-lfI">
+        <!--Stream Chat View Controller-->
+        <scene sceneID="lZx-NK-g9a">
             <objects>
-                <viewController id="MAB-8A-8de" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Q8R-Ab-pz6"/>
-                        <viewControllerLayoutGuide type="bottom" id="7v5-4h-23q"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="djv-ig-iTi">
-                        <rect key="frame" x="0.0" y="0.0" width="1285" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="miD-LV-NVy" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-614.5" y="-2647"/>
-        </scene>
-        <!--Chat-->
-        <scene sceneID="oJS-oR-K0f">
-            <objects>
-                <tableViewController storyboardIdentifier="StreamChatViewController" clearsSelectionOnViewWillAppear="NO" id="Z8p-LN-yuO" customClass="StreamChatViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="40" sectionFooterHeight="40" id="OFR-YR-rf7">
-                        <rect key="frame" x="0.0" y="0.0" width="634" height="1080"/>
+                <tableViewController storyboardIdentifier="StreamChatViewController" id="Dgf-wd-Hnh" customClass="StreamChatViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="40" sectionFooterHeight="40" id="tDp-Bc-EJD">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="streamChatCellReuseIdentifier" id="cZD-Sc-hr2" customClass="StreamChatTableViewCell">
-                                <rect key="frame" x="0.0" y="54" width="634" height="66"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="DCM-9O-cUN">
+                                <rect key="frame" x="0.0" y="54" width="1880" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cZD-Sc-hr2" id="7r0-p2-yA4">
-                                    <rect key="frame" x="0.0" y="0.0" width="618" height="66"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DCM-9O-cUN" id="OnL-9i-qDc">
+                                    <rect key="frame" x="0.0" y="0.0" width="1904" height="66"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="Z8p-LN-yuO" id="syo-Cl-w1M"/>
-                            <outlet property="delegate" destination="Z8p-LN-yuO" id="Aht-Xn-ohp"/>
+                            <outlet property="dataSource" destination="Dgf-wd-Hnh" id="JZu-4U-k1b"/>
+                            <outlet property="delegate" destination="Dgf-wd-Hnh" id="2hW-VZ-Igx"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Chat" id="NRG-rA-c3p"/>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Fhy-sW-nCv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GaO-6O-qcd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-940" y="-3935"/>
+            <point key="canvasLocation" x="-300" y="-4624"/>
         </scene>
         <!--Stream Watch View Controller-->
-        <scene sceneID="u0l-Xp-nYD">
+        <scene sceneID="XNm-vS-K1a">
             <objects>
-                <splitViewController id="WEw-lq-zhX" customClass="StreamWatchViewController" sceneMemberID="viewController">
-                    <connections>
-                        <segue destination="MAB-8A-8de" kind="relationship" relationship="detailViewController" id="Ijv-xj-MLd"/>
-                        <segue destination="Z8p-LN-yuO" kind="relationship" relationship="masterViewController" id="3gv-eX-7bR"/>
-                    </connections>
-                </splitViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YAD-aw-ZFJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="Bf6-qa-GoC" customClass="StreamWatchViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MAd-za-PC1"/>
+                        <viewControllerLayoutGuide type="bottom" id="o61-OW-6f8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kCU-r2-mbV">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4kd-DS-0ta" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2433" y="-3215"/>
+            <point key="canvasLocation" x="-300" y="-3290"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -867,7 +854,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-276" y="-640"/>
+            <point key="canvasLocation" x="-2404" y="-928"/>
         </scene>
         <!--Search Results View Controller-->
         <scene sceneID="64v-jz-hW4">
@@ -997,6 +984,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="M1N-Xz-Ahe" id="cPE-xN-zNy"/>
+                        <segue destination="Bf6-qa-GoC" kind="presentation" identifier="showStreamWatch" id="NYr-OI-WR3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wEd-PL-Y6M" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1008,7 +996,7 @@
         <image name="authentication-done" width="468" height="468"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="no7-bf-mmM"/>
         <segue reference="R3F-7E-fGd"/>
+        <segue reference="NYr-OI-WR3"/>
     </inferredMetricsTieBreakers>
 </document>

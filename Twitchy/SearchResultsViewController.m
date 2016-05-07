@@ -12,6 +12,7 @@
 #import "TwitchFeaturedStreamListing.h"
 #import "SectionHeaderReusableView.h"
 #import "StreamsViewController.h"
+#import "StreamWatchViewController.h"
 
 #define kStreamCollectionViewCellReuseIdentifier @"streamCellReuseIdentifier"
 #define kGameCollectionViewCellReuseIdentifier @"gameCellReuseIdentifier"
@@ -43,6 +44,15 @@
     _loadingView.color = [UIColor darkGrayColor];
     _loadingView.center = self.view.center;
     [self.view addSubview:_loadingView];
+}
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([segue.identifier isEqualToString:@"showStreamWatch"]) {
+        
+        StreamWatchViewController * controller = (StreamWatchViewController*) segue.destinationViewController;
+        controller.stream = sender;
+    }
 }
 
 #pragma mark - UICollectionViewDataSource Methods
@@ -110,7 +120,8 @@
     } else {
         
         TwitchStream * stream = _streams[indexPath.row];
-        [stream presentStreamInViewController:self];
+//        [stream presentStreamInViewController:self];
+        [self performSegueWithIdentifier:@"showStreamWatch" sender:stream];
     }
 }
 

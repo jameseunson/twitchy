@@ -225,7 +225,7 @@
             [[AppConfig sharedConfig] setObject:token forKey:kOAuthToken];
             
             // Retrieve username for token, so we can display it in confirmation message
-            [[TwitchAPIClient sharedClient] getUserDetails:^(TwitchUser *result) {
+            [[TwitchAPIClient sharedClient] loadUserDetails:^(TwitchUser *result) {
                 NSLog(@"%@", result);
                 
                 [[AppConfig sharedConfig] setObject:result.name forKey:kOAuthUsername];
