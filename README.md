@@ -9,4 +9,8 @@ More information about this project is available at http://jeon.com.au/twitchy
 
 A video of this project in action is available here: https://vimeo.com/162956789
 
+Note, if you wish to compile this project yourself, you will need to create a header file called "TwitchAPIKeys.h" which contains two defines, kAPIClientID and kAPIClientSecret. You will receive these two values when registering a new application on the Twitch.tv site at https://www.twitch.tv/kraken/oauth2/clients/new
+
 ![Twitchy for tvOS by James Eunson](https://i.imgur.com/kfggsGD.jpg "Twitchy for tvOS by James Eunson")
+
+![Twitchy for tvOS by James Eunson](https://i.imgur.com/QTHoHcU.jpg "Twitchy for tvOS by James Eunson")
