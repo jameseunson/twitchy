@@ -20,7 +20,7 @@
 #define kAPIAccessTokenBaseURL @"https://api.twitch.tv"
 #define kAPIUsherBaseURL @"http://usher.twitch.tv"
 
-#define kAPITwitchyBackendURL @"http://localhost:3000/api"
+#define kAPITwitchyBackendURL @"http://twitchy.jeon.com.au/api"
 
 #define kTwitchAPIClientEmoticonsFinishedLoadingNotification @"kTwitchAPIClientEmoticonsFinishedLoadingNotification"
 

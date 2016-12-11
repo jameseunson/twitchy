@@ -1,4 +1,4 @@
-//
+    //
 //  TwitchAPIClient.m
 //  Twitchy
 //
@@ -216,6 +216,13 @@ static TwitchAPIClient * _sharedClient = nil;
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"ERROR: %@", error);
+        
+        NSDictionary * userInfo = error.userInfo;
+        
+        NSData * data = userInfo[@"com.alamofire.serialization.response.error.data"];
+        NSString * responseErrorString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"%@, %@", userInfo, responseErrorString);
     }];
 }
 
@@ -474,6 +481,12 @@ static TwitchAPIClient * _sharedClient = nil;
                       [NSURL URLWithString:kAPIAccessTokenBaseURL]
                                               sessionConfiguration:
                       [NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    AFHTTPRequestSerializer * requestSerializer = [AFHTTPRequestSerializer serializer];
+    [requestSerializer setValue:kAPIClientID forHTTPHeaderField:@"Client-ID"];
+    
+    _accessTokenManager.requestSerializer = requestSerializer;
+    
     return _accessTokenManager;
 }
 

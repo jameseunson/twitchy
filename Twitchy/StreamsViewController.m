@@ -180,9 +180,9 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
     TwitchStream * selectedStream = self.streams[indexPath.row];
-    [self performSegueWithIdentifier:@"showStreamWatch" sender:selectedStream];
+    [selectedStream presentStreamInViewController:self];
     
-//    [selectedStream presentStreamInViewController:self];
+//    [self performSegueWithIdentifier:@"showStreamWatch" sender:selectedStream];
 }
 
 #pragma mark - Private Methods

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define kConfigStoreName @"MonashConfig"
+#define kConfigStoreName @"TwitchyConfig"
 
 // Session
 #define kOAuthUsername @"oAuthUsername"

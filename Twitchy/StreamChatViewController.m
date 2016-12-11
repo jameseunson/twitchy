@@ -31,12 +31,12 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if(self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loggedIntoIRCServer:)
-                                                     name:kTwitchIRCClientReadyToJoinChannelNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_chatMessageReceived:)
-                                                     name:kTwitchIRCClientReceivedMessageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_chatEmoticonDownloaded:)
-                                                     name:kTwitchIRCClientDownloadedEmoticonImageNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loggedIntoIRCServer:)
+//                                                     name:kTwitchIRCClientReadyToJoinChannelNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_chatMessageReceived:)
+//                                                     name:kTwitchIRCClientReceivedMessageNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_chatEmoticonDownloaded:)
+//                                                     name:kTwitchIRCClientDownloadedEmoticonImageNotification object:nil];
     }
     return self;
 }
@@ -57,18 +57,18 @@
     self.title = @"Chat";
     self.tableView.contentInset = UIEdgeInsetsMake(20.0f, 10.0f, 0, 10.0f);
     
-    if(![[AppConfig sharedConfig] streamChatEmoticonsDownloadStarted]) {
-        [[TwitchAPIClient sharedClient] loadChatEmoticonsWithCompletion:^(NSString *result) {
-//            NSLog(@"loadChatEmoticonsWithCompletion: %@", result);
-        }];
-    }
+//    if(![[AppConfig sharedConfig] streamChatEmoticonsDownloadStarted]) {
+//        [[TwitchAPIClient sharedClient] loadChatEmoticonsWithCompletion:^(NSString *result) {
+////            NSLog(@"loadChatEmoticonsWithCompletion: %@", result);
+//        }];
+//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    NSString * channelName = [NSString stringWithFormat: @"#%@", _stream.channel.name];
-    [[TwitchIRCClient sharedClient] leaveChannel:channelName];
+//    NSString * channelName = [NSString stringWithFormat: @"#%@", _stream.channel.name];
+//    [[TwitchIRCClient sharedClient] leaveChannel:channelName];
 }
 
 #pragma mark - UITableViewDataSource Methods

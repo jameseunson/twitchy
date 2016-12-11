@@ -22,13 +22,13 @@
     [self addChildViewController:_playbackController];
     [self.view addSubview:_playbackController.view];
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main" bundle:[NSBundle mainBundle]];
-    self.chatController = [storyboard instantiateViewControllerWithIdentifier:@"StreamChatViewController"];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName: @"Main" bundle:[NSBundle mainBundle]];
+//    self.chatController = [storyboard instantiateViewControllerWithIdentifier:@"StreamChatViewController"];
+//    
+//    _chatController.stream = self.stream;
     
-    _chatController.stream = self.stream;
-    
-    [self addChildViewController:_chatController];
-    [self.view addSubview:_chatController.view];
+//    [self addChildViewController:_chatController];
+//    [self.view addSubview:_chatController.view];
     
     [[TwitchAPIClient sharedClient] loadAccessTokenForChannel:self.stream.channel withCompletion:^(NSDictionary *result) {
         
